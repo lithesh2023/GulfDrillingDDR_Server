@@ -11,19 +11,21 @@ const operationSchema = new Schema({
         type: Number,
         required: true
     },
-    "Actual_HRS": {
-        type: Number
-    },
-    "Diff_HRS": {
-        type: String,
-
-    },
+    
     "description": {
         type: String,
     },
     "createdBy": {
         type: String,
         required: true
+    },
+    "operation_code":{
+        type: String,
+        required: true
+    },
+    "day_number":{
+        type:Number,
+        reuired:true
     },
     //"createdBy":{ type: Schema.Types.ObjectId, ref: "User" ,required: true},
     "well":{ type: Schema.Types.ObjectId, ref: "Well" ,required: true},

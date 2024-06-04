@@ -4,8 +4,16 @@ const mongoose = require('mongoose')
 // const {authenticateToken}= require('../../utils/auth')
 // Router.use(authenticateToken)
 const Well = require('../../model/well')
-Router.get("/:id", (req, res) => {
-
+Router.get("/:id", async(req, res) => {
+    const id = req.params.id
+    console.log(id)
+    try {
+        const well = await Well.findById(id)
+        res.status(200).send(well)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send(error)
+    }
 })
 Router.post("/", (req, res) => {
     console.log("body ", req.body)
