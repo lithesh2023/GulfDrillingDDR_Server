@@ -34,7 +34,7 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  well: [{ type: Schema.Types.ObjectId, ref: "Well" }],
 })
 
 module.exports = mongoose.model("User", userSchema)

@@ -4,6 +4,7 @@ const router = express.Router()
 const { generateToken } = require("../../utils/auth")
 const bcrypt = require("bcryptjs")
 const { updateUserDetails } = require('../../controllers/user')
+const Well = require("../../model/well")
 // Create a new user
 router.post("/", async (req, res) => {
   const { name, email, password } = req.body
@@ -92,6 +93,28 @@ router.put('/addfriend',async(req,res)=>{
       const user = await User.findByIdAndUpdate(
         id,
         {friends: [friend.id]},
+        { new: true }
+      )
+      res.send(user)
+    }
+    else{
+      res
+    }
+    
+  } catch (error) {
+    console.error(error)
+    res.status(500).send(error)
+  }
+})
+router.put('/addwell/:id',async(req,res)=>{
+  const { well_id } = req.params.id
+  
+  try {
+    const well = await Well.findById(well_id)
+    if(well){
+      const user = await User.findByIdAndUpdate(
+        id,
+        {well: [well.id]},
         { new: true }
       )
       res.send(user)

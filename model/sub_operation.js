@@ -4,13 +4,11 @@ const Schema = mongoose.Schema;
 
 const SubOperationSchema = new Schema({
     "StartTime": {
-        type: Date,
-        default: Date.now,
+        type: String,
         required: true
     },
     "EndTime": {
-        type: Date,
-        default: Date.now,
+        type: String,
         required: true
     },
     "DiffHours": {
@@ -26,7 +24,7 @@ const SubOperationSchema = new Schema({
         type: String,
         required: true
     },
-    "SubOpCOde": {
+    "SubOpCode": {
         type: String,
         required: true
     },

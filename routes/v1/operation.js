@@ -3,24 +3,42 @@ const mongoose = require('mongoose');
 // const {authenticateToken}= require('../../utils/auth')
 // Router.use(authenticateToken)
 const Operation = require('../../model/operation')
+const SubOperation = require('../../model/sub_operation')
 Router.get("/:id", async (req, res) => {
 
   try {
     const id = req.params.id
+
+    console.log("request id",id)
     const result = await Operation.find({ well: id })
-    const data = result.map((operation) => {
+    console.log("result",result)
+    const promises = await result.map(async (operation) => {
+      const subOpnsColl = await SubOperation.find({ Operation: operation._id })
+      const subOperations = subOpnsColl.map((sub) => {
+        return {
+          "StartTime": sub.StartTime,
+          "EndTime": sub.EndTime,
+          "DiffHours": 0,
+          "Category": sub.Category,
+          "Type": sub.Type,
+          "SubOpCode": sub.SubOpCode,
+          "Description": sub.Description,
+
+        }
+      })
       return {
         "id": operation.id,
         "StartDate": operation.StartDate,
         "Plan_HRS": operation.Plan_HRS,
-       
         "description": operation.description,
-        
         "createdBy": operation.createdBy,
-        "operation_code":operation.operation_code,
-        "day_number":operation.day_number
+        "operation_code": operation.operation_code,
+        "day_number": operation.day_number,
+        "subOpns":subOperations?subOperations:[]
       }
     })
+    const data = await Promise.all(promises)
+    console.log("data",data)
     res.status(200).send(data)
   }
   catch (error) {
@@ -30,8 +48,8 @@ Router.get("/:id", async (req, res) => {
 })
 Router.post("/", (req, res) => {
 
-  const { StartDate, Plan_HRS,operation_code, description, createdBy="Lithesh", well,day_number } = req.body
-  const operation = new Operation({ StartDate, Plan_HRS, operation_code, description, createdBy,day_number, well })
+  const { StartDate, Plan_HRS, operation_code, description, createdBy = "Lithesh", well, day_number } = req.body
+  const operation = new Operation({ StartDate, Plan_HRS, operation_code, description, createdBy, day_number, well })
   operation
     .save()
     .then((result) => {
@@ -56,11 +74,13 @@ Router.get("/", async (req, res) => {
         "id": operation.id,
         "StartDate": operation.StartDate,
         "Plan_HRS": operation.Plan_HRS,
-        "Actual_HRS": operation.Actual_HRS,
+       
         "description": operation.description,
         "Diff_HRS": operation.Diff_HRS,
         "createdBy": operation.createdBy,
-        "unit": operation.rig
+       
+        "operation_code": operation.operation_code,
+        "day_number": operation.day_number,
       }
     })
     res.status(200).send(data)
