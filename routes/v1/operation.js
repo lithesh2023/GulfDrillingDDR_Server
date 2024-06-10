@@ -1,17 +1,14 @@
 const Router = require('express').Router()
 const mongoose = require('mongoose');
-// const {authenticateToken}= require('../../utils/auth')
-// Router.use(authenticateToken)
+const {authenticateToken}= require('../../utils/auth')
+Router.use(authenticateToken)
 const Operation = require('../../model/operation')
 const SubOperation = require('../../model/sub_operation')
 Router.get("/:id", async (req, res) => {
 
   try {
     const id = req.params.id
-
-    console.log("request id",id)
     const result = await Operation.find({ well: id })
-    console.log("result",result)
     const promises = await result.map(async (operation) => {
       const subOpnsColl = await SubOperation.find({ Operation: operation._id })
       const subOperations = subOpnsColl.map((sub) => {
@@ -38,7 +35,7 @@ Router.get("/:id", async (req, res) => {
       }
     })
     const data = await Promise.all(promises)
-    console.log("data",data)
+  
     res.status(200).send(data)
   }
   catch (error) {

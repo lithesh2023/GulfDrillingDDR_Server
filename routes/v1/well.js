@@ -1,8 +1,8 @@
 const Router = require('express').Router()
 const well = require('../../model/well')
 const mongoose = require('mongoose')
-// const {authenticateToken}= require('../../utils/auth')
-// Router.use(authenticateToken)
+const {authenticateToken}= require('../../utils/auth')
+Router.use(authenticateToken)
 const Well = require('../../model/well')
 Router.get("/:id", async(req, res) => {
     const id = req.params.id

@@ -1,7 +1,7 @@
 const Router = require('express').Router()
 
-// const {authenticateToken}= require('../../utils/auth')
-// Router.use(authenticateToken)
+const {authenticateToken}= require('../../utils/auth')
+Router.use(authenticateToken)
 const Keyword = require('../../model/keyword')
 Router.post("/",async(req,res)=>{
     console.log("body ",req.body)

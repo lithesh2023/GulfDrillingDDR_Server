@@ -2,7 +2,11 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
-  username: {
+  firstname: {
+    type: String,
+    required: true,
+  },
+  lastname: {
     type: String,
     required: true,
   },
@@ -33,6 +37,9 @@ const userSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  role:{
+    type:String
   },
   well: [{ type: Schema.Types.ObjectId, ref: "Well" }],
 })

@@ -35,7 +35,12 @@ router.post("/login", async (req, res) => {
     }
 
     const token = generateToken(user)
-    res.json({ token })
+    const currentUser={
+      name:user.firstname+' '+user.lastname,
+      email:user.email,
+      well:user.well
+    }
+    res.json({ token,currentUser })
   } catch (error) {
     console.error("Login error:", error)
     res.status(500).json({ message: "Server error" })
@@ -45,9 +50,11 @@ router.post("/login", async (req, res) => {
 // Register endpoint
 router.post("/register", async (req, res) => {
   try {
-    // Extract username and password from request body
-    const { name, password, email, phone } = req.body.values
+
     console.log(req.body)
+    // Extract username and password from request body
+    const { firstname,lastname, password, email, phone } = req.body
+    
     // Check if user already exists
     const existingUser = await User.findOne({ email })
     if (existingUser) {
@@ -58,7 +65,7 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10)
 
     // Create new user
-    const newUser = new User({ name, password: hashedPassword, email, phone })
+    const newUser = new User({ firstname,lastname, password: hashedPassword, email, phone })
     newUser
       .save()
       .then(() => {

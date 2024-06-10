@@ -1,6 +1,6 @@
 const Router = require('express').Router()
-// const {authenticateToken}= require('../../utils/auth')
-// Router.use(authenticateToken)
+const {authenticateToken}= require('../../utils/auth')
+Router.use(authenticateToken)
 const Operation = require('../../model/operation_key')
 Router.get("/:key",(req,res)=>{
     

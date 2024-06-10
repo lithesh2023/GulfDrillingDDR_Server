@@ -7,7 +7,7 @@ function generateToken(user) {
 // Protect routes with JWT middleware
 function authenticateToken(req, res, next) {
   const token = req.headers['authorization'];
-
+console.log("Token", token)
   if (!token) return res.sendStatus(401);
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
       if (err) return res.sendStatus(403);
