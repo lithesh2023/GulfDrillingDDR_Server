@@ -3,8 +3,9 @@ const routes = require('./routes')
 const cors = require('cors')
 const path = require('path');
 
-
-require('dotenv').config()
+// if (process.env.NODE_ENV === 'local') {
+// require('dotenv').config()
+// }
 const app = express()
 const connectDB = require('./database/mongo');
 app.use(express.json())

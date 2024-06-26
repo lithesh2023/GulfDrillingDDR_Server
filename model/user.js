@@ -28,7 +28,7 @@ const userSchema = new Schema({
   employee_number:{
     type:String,
   },
-  designaton:{
+  designation:{
     type:String
   },
   unit:{

@@ -6,7 +6,7 @@ Router.use(authenticateToken)
 const Well = require('../../model/well')
 Router.get("/:id", async(req, res) => {
     const id = req.params.id
-    console.log(id)
+
     try {
         const well = await Well.findById(id)
         res.status(200).send(well)
@@ -16,7 +16,7 @@ Router.get("/:id", async(req, res) => {
     }
 })
 Router.post("/", (req, res) => {
-    console.log("body ", req.body)
+
     const { well_number, rig_up_date, job_type, lti_days, client, unit, createdBy = "Lithesh" } = req.body
     const well = new Well({ well_number, rig_up_date, job_type, lti_days, contractor: client, rig: unit, createdBy })
     well
@@ -60,7 +60,7 @@ Router.get("/", async (req, res) => {
 })
 Router.put("/:id", async (req, res) => {
     const id = req.params.id
-    console.log(id, req.body)
+
 
     await Well.findByIdAndUpdate( id,
         { ...req.body },
@@ -69,7 +69,6 @@ Router.put("/:id", async (req, res) => {
 })
 Router.delete("/:id", async (req, res) => {
     const id = req.params.id
-    console.log(id)
     try {
         const well = await Well.findByIdAndDelete(id)
         res.status(200).send("Deleted")

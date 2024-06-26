@@ -38,7 +38,9 @@ router.post("/login", async (req, res) => {
     const currentUser={
       name:user.firstname+' '+user.lastname,
       email:user.email,
-      well:user.well
+      well:user.well,
+      role:user.role,
+      unit:user.unit
     }
     res.json({ token,currentUser })
   } catch (error) {
@@ -51,7 +53,7 @@ router.post("/login", async (req, res) => {
 router.post("/register", async (req, res) => {
   try {
 
-    console.log(req.body)
+   
     // Extract username and password from request body
     const { firstname,lastname, password, email, phone } = req.body
     
@@ -93,7 +95,7 @@ router.use(authenticateToken)
 
 router.put('/addfriend',async(req,res)=>{
   const { id } = req.user
-  console.log('body',req.body)
+
   try {
     const friend = await User.findOne({email:req.body.email})
     if(friend){

@@ -6,7 +6,7 @@ Router.get("/:key",(req,res)=>{
     
 })
 Router.post("/",(req,res)=>{
-    console.log("body ",req.body)
+  
     const {operation_name,value,description='NA',department='NA'} = req.body
     const operation = new Operation({operation_name,value,description,department})
     operation

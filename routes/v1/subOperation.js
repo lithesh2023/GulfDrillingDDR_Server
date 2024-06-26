@@ -6,7 +6,7 @@ Router.get("/:id",(req,res)=>{
 
 })
 Router.post("/",(req,res)=>{
-  console.log(req.body)
+
    
     const {StartTime,EndTime,Category,Type,description,SubOpCode,Description,createdBy="Lithesh", Operation} = req.body
     const subOp = new SubOperation({StartTime,EndTime,Category,Type,description,SubOpCode,Description,Operation,createdBy})
