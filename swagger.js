@@ -14,13 +14,17 @@ module.exports = async (app, port, env) => {
       components: {
          securitySchemes: {
             BasicAuth: {
-               type:'http',
-               in: 'header',
-               name:'Authorization'
+               type: 'http',
+               scheme: 'basic',
             }
          }
       },
-      host:`localhost:${port}`,
+      security: [
+         {
+            BasicAuth: [],
+         },
+      ],
+      host: `localhost:${port}`,
       schemes: env.toLowerCase() === 'local' ? ['http'] : ['https']
    }
    const outputFile = './bin/swagger.json'
