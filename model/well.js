@@ -30,6 +30,11 @@ const wellSchema = new Schema({
     "rig":{
         type:String,
         required:true
+    },
+    "status":{
+        type:String,
+        default:'Not Started',
+        required:true
     }
     //"createdBy":{ type: Schema.Types.ObjectId, ref: "User" ,required: true},
 });

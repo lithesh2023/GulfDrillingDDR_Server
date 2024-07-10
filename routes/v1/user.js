@@ -1,7 +1,7 @@
 const express = require("express")
 const User = require("../../model/user")
 const router = express.Router()
-const { generateToken } = require("../../utils/auth")
+const { generateAccessToken, generateRefreshToken } = require("../../utils/auth")
 const bcrypt = require("bcryptjs")
 const { updateUserDetails } = require('../../controllers/user')
 const Well = require("../../model/well")
@@ -34,15 +34,21 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" })
     }
 
-    const token = generateToken(user)
-    const currentUser={
-      name:user.firstname+' '+user.lastname,
-      email:user.email,
-      well:user.well,
-      role:user.role,
-      unit:user.unit
+    const token = generateAccessToken(user)
+    const currentUser = {
+      name: user.firstname + ' ' + user.lastname,
+      email: user.email,
+      well: user.well,
+      role: user.role,
+      unit: user.unit
     }
-    res.json({ token,currentUser })
+    const refreshToken = generateRefreshToken(user)
+    // Saving refreshToken with current user
+    user.refreshToken = refreshToken;
+    const result = await user.save();
+    // Creates Secure Cookie with refresh token
+    res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+    res.json({ token, currentUser })
   } catch (error) {
     console.error("Login error:", error)
     res.status(500).json({ message: "Server error" })
@@ -53,10 +59,10 @@ router.post("/login", async (req, res) => {
 router.post("/register", async (req, res) => {
   try {
 
-   
+
     // Extract username and password from request body
-    const { firstname,lastname, password, email, phone } = req.body
-    
+    const { firstname, lastname, password, email, phone } = req.body
+
     // Check if user already exists
     const existingUser = await User.findOne({ email })
     if (existingUser) {
@@ -67,7 +73,7 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10)
 
     // Create new user
-    const newUser = new User({ firstname,lastname, password: hashedPassword, email, phone })
+    const newUser = new User({ firstname, lastname, password: hashedPassword, email, phone })
     newUser
       .save()
       .then(() => {
@@ -93,45 +99,45 @@ router.get("/", async (req, res) => {
 const { authenticateToken } = require("../../utils/auth")
 router.use(authenticateToken)
 
-router.put('/addfriend',async(req,res)=>{
+router.put('/addfriend', async (req, res) => {
   const { id } = req.user
 
   try {
-    const friend = await User.findOne({email:req.body.email})
-    if(friend){
+    const friend = await User.findOne({ email: req.body.email })
+    if (friend) {
       const user = await User.findByIdAndUpdate(
         id,
-        {friends: [friend.id]},
+        { friends: [friend.id] },
         { new: true }
       )
       res.send(user)
     }
-    else{
+    else {
       res
     }
-    
+
   } catch (error) {
     console.error(error)
     res.status(500).send(error)
   }
 })
-router.put('/addwell/:id',async(req,res)=>{
+router.put('/addwell/:id', async (req, res) => {
   const { well_id } = req.params.id
-  
+
   try {
     const well = await Well.findById(well_id)
-    if(well){
+    if (well) {
       const user = await User.findByIdAndUpdate(
         id,
-        {well: [well.id]},
+        { well: [well.id] },
         { new: true }
       )
       res.send(user)
     }
-    else{
+    else {
       res
     }
-    
+
   } catch (error) {
     console.error(error)
     res.status(500).send(error)
@@ -143,7 +149,7 @@ router.put("/:id", async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
       id,
-      {...req.body },
+      { ...req.body },
       { new: true }
     )
     res.send(user)

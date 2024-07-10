@@ -7,7 +7,8 @@ const { authenticateToken } = require('../../utils/auth')
 Router.use(authenticateToken)
 Router.get('/', async (req, res) => {
 
-    const wellCount = await Well.countDocuments()
+    const well = await Well.find({status:'Active'})
+    console.log("well active", well)
     const userCount = await User.countDocuments()
     // Get today's date at midnight
     const startOfDay = new Date();
@@ -23,7 +24,7 @@ Router.get('/', async (req, res) => {
         }
     })
     res.status(200).json({
-        wellCount, userCount, POB
+        well:well[0]?well[0]:{}, userCount, POB
     })
 })
 module.exports = Router

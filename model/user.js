@@ -38,10 +38,11 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  role:{
+  roles:[{
     type:String
-  },
+  }],
   well: [{ type: Schema.Types.ObjectId, ref: "Well" }],
+  refreshToken: String
 })
 
 module.exports = mongoose.model("User", userSchema)

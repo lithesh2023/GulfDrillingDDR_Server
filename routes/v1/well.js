@@ -48,9 +48,11 @@ Router.get("/", async (req, res) => {
                 "client": well.contractor,
                 "unit": well.unit,
                 "lti_days": well.lti_days,
-                "unit": well.rig
+                "unit": well.rig,
+                "status":well.status
             }
         })
+        if (!data) return res.status(204).json({ 'message': 'No wells found.' });
         res.status(200).send(data)
     } catch (error) {
         console.error(error)
